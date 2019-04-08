@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"time"
@@ -144,6 +145,13 @@ func (mgr *RoomManager) Message(s *session.Session, msg *UserMessage) error {
 	return room.group.Broadcast("onMessage", msg)
 }
 
+
+// 啟動一個http server
+func deployPage(w http.ResponseWriter, r *http.Request){
+	io.WriteString(w, "<h1> Hello deplay success</h2>")
+	reLaunch()  // 重啟新服務
+}
+
 func main() {
 	// override default serializer
 	nano.SetSerializer(json.NewSerializer())
@@ -167,8 +175,11 @@ func main() {
 
 	http.Handle("/web/", http.StripPrefix("/web/", http.FileServer(http.Dir("web"))))
 
-	reLaunch()  // 重啟新服務
+
 
 	nano.SetCheckOriginFunc(func(_ *http.Request) bool { return true })
 	nano.ListenWS(":3350", nano.WithPipeline(pipeline))
+
+	http.HandleFunc("/deploy",deployPage)
+	http.ListenAndServe(":3450", nil)
 }

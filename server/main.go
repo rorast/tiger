@@ -132,6 +132,7 @@ func (mgr *RoomManager) Message(s *session.Session, msg *UserMessage) error {
 	return room.group.Broadcast("onMessage", msg)
 }
 
+
 func main() {
 	// override default serializer
 	nano.SetSerializer(json.NewSerializer())
