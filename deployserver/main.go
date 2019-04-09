@@ -122,7 +122,9 @@ func (mgr *RoomManager) Join(s *session.Session, msg []byte) error {
 	// new user join group
 	room.group.Add(s) // add session to group
 	//return s.Response(&JoinResponse{Result: "success"})
-	return s.Response(&JoinResponse{Result: "{1,2,3,4,5,6,7,8,9,10}{2,4,6,8,10,12,14,16,18,20}"})
+	return s.Response(&JoinResponse{Result: "{1,2,3,4,5,6,7,8,9,10}" +
+		"{2,4,6,8,10,12,14,16,18,20}" +
+		"{32,34,36,38,30,32,34,36,38,23}"})
 }
 
 // Message sync last message to all members

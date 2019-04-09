@@ -1,7 +1,7 @@
 #! /bin/sh
 
 kill 9 $(pgrep deployserver)
-cd ~/tiger/
+cd ~/../home/imooc_manager/tiger
 git pull https://github.com/rorast/tiger.git
-cd server/deployserver
-./deployserver &
+cd ./tiger/deployserver
+./deployserver
