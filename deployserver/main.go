@@ -2,11 +2,9 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"time"
-	"os/exec"
 
 	"github.com/lonng/nano"
 	"github.com/lonng/nano/component"
@@ -57,15 +55,6 @@ type (
 	}
 )
 
-// 重啟服務
-func reLaunch() {
-	cmd := exec.Command("sh","./deploy.sh")
-	err := cmd.Start()
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = cmd.Wait()
-}
 
 func (stats *stats) outbound(s *session.Session, msg nano.Message) error {
 	stats.outboundBytes += len(msg.Data)
@@ -146,11 +135,6 @@ func (mgr *RoomManager) Message(s *session.Session, msg *UserMessage) error {
 }
 
 
-// 啟動一個http server
-func deployPage(w http.ResponseWriter, r *http.Request){
-	io.WriteString(w, "<h1> Hello deplay success</h2>")
-	reLaunch()  // 重啟新服務
-}
 
 func main() {
 	// override default serializer
@@ -176,10 +160,9 @@ func main() {
 	http.Handle("/web/", http.StripPrefix("/web/", http.FileServer(http.Dir("web"))))
 
 
-
 	nano.SetCheckOriginFunc(func(_ *http.Request) bool { return true })
 	nano.ListenWS(":3350", nano.WithPipeline(pipeline))
 
-	http.HandleFunc("/deploy",deployPage)
-	http.ListenAndServe(":3450", nil)
+
+
 }
